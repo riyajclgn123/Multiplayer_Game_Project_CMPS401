@@ -1,4 +1,4 @@
-# WebSocket Message Protocol for Tic-Tac-Toe & Rock-Paper-Scissors
+# WebSocket Message Protocol
 
 ## Purpose
 
