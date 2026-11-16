@@ -13,7 +13,6 @@ Real-time multiplayer browser games (Tic-Tac-Toe, Rock-Paper-Scissors and UNO) w
 
 Team project for **CMPS 401, Southeastern Louisiana University, Fall 2025**. This repository is my fork of the team repository [arlemoine/CMPS401](https://github.com/arlemoine/CMPS401). The game app lives in [`Project/`](Project); the rest of the repo holds the course's language-study material and programming assignments.
 
-> **Note on this fork:** the UNO game and the Rock-Paper-Scissors screen were merged into the team repository after this fork was last synced. This fork's `main` already has the Rock-Paper-Scissors server logic, Tic-Tac-Toe and chat. To get the complete app, run `git pull upstream main` (it fast-forwards cleanly) or use the team repository.
 
 ## Overview
 
@@ -26,7 +25,7 @@ There is no database. Rooms, players, chat history and game state are kept in se
 - **Room-based matchmaking.** Create a room and share its code, or join an existing room by code. Joining a room that does not exist yet creates it.
 - **Tic-Tac-Toe.** Server-side move validation, turn order, and win and draw detection for two players.
 - **Rock-Paper-Scissors.** Two players submit choices; the server reveals both and resolves the round once both are in. Rounds can be reset without leaving the room.
-- **UNO** (in the team repo, see note above). Full 108-card deck with Skip, Reverse, Draw Two, Wild and Wild Draw Four; a 7-card deal; a wild-color lock after a wild is played; draw and pass actions. Each player's hand is sent only to that player, while everyone else sees card counts.
+- **UNO**. Full 108-card deck with Skip, Reverse, Draw Two, Wild and Wild Draw Four; a 7-card deal; a wild-color lock after a wild is played; draw and pass actions. Each player's hand is sent only to that player, while everyone else sees card counts.
 - **Live chat** in every room, broadcast to all room members with timestamps.
 - **Resilient client connection.** The WebSocket wrapper queues outgoing messages while the socket is connecting and flushes them once it opens.
 - **Documented message protocol.** Every message type and payload is written up in [`Project/docs/message_protocol.md`](Project/docs/message_protocol.md), with manual test steps in [`Project/docs/backend_api_testing.md`](Project/docs/backend_api_testing.md).
@@ -58,7 +57,7 @@ flowchart LR
 How a message flows:
 
 1. The client opens one WebSocket to `ws://127.0.0.1:3001/ws` (set by `VITE_WS_URL`).
-2. Every message is JSON shaped as `{ "type": "...", "data": { ... } }`. The server deserializes it into a Rust enum (`ClientMessage`) with Serde, using the `type` tag to pick the variant: `Echo`, `GameRoom`, `Chat`, `TicTacToe`, `RockPaperScissors` (and `Uno` upstream).
+2. Every message is JSON shaped as `{ "type": "...", "data": { ... } }`. The server deserializes it into a Rust enum (`ClientMessage`) with Serde, using the `type` tag to pick the variant: `Echo`, `GameRoom`, `Chat`, `TicTacToe`, `RockPaperScissors` and `Uno`.
 3. A handler for that type updates the room's state inside a Tokio `RwLock`.
 4. The resulting `ServerMessage` is broadcast to every connection in the room through per-client `mpsc` channels. When a client disconnects, its channel is removed from every room.
 
